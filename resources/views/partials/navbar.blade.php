@@ -16,7 +16,7 @@
                    class="{{ request()->routeIs('education') ? 'active' : '' }}">Education</a>
             </li>
             <li>
-                <a href="{{ route('projects') }}"
+                <a href="{{ route('projects.index') }}"
                    class="{{ request()->routeIs('projects') ? 'active' : '' }}">Projects</a>
             </li>
         </ul>

@@ -1,5 +1,25 @@
  <?php
 
+// use Illuminate\Support\Facades\Route;
+
+//Route::get('/', function () {
+  //  return view('welcome');
+//});
+
+//Route::get('/halo-dunia', function() {
+   // return '<h1>Halo dunia</h1>';
+//});
+
+//Route::get('/halo/{nama?}', function($nama = 'Tanpa Nama') {
+  //  return '<h1>Halo ' . $nama. '</h1>';
+//});
+
+//Route::get('/halo_dunia', function() {
+  //  return view('halo_dunia'); -->
+    // memanggil resources/views/halo_dunia.blade.php
+// });
+
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,8 +34,7 @@ Route::get('/education', function () {
     return view('education');
 })->name('education');
 
-Route::get('/projects', function () {
-    return view('projects');
-})->name('projects');
+Route::resource('projects', ProjectController::class)
+    ->only(['index', 'create', 'store', 'show']);
 
 
