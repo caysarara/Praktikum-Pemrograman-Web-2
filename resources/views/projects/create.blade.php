@@ -21,7 +21,8 @@
                 @csrf
 
                 <div class="form-group">
-                    <label for="nama" class="form-label">Nama Project <span class="req" aria-hidden="true">*</label>
+                    <label for="nama" class="form-label">Nama Project <span class="req" 
+                    aria-hidden="true">*</label>
                     <input type="text" id="nama" name="nama"
                            value="{{ old('nama') }}"
                            class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}"
@@ -32,10 +33,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="deskripsi" class="form-label">Deskripsi <span class="req" aria-hidden="true">*</span></label>
+                    <label for="deskripsi" class="form-label">Deskripsi <span class="req" 
+                    aria-hidden="true">*</span></label>
                     <textarea id="deskripsi" name="deskripsi" rows="5"
                               class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}"
-                              placeholder="Jelaskan project ini secara singkat">{{ old('deskripsi') }}</textarea>
+                              placeholder="Jelaskan project ini secara singkat">{{ old('deskripsi') }}
+                            </textarea>
                     @error('deskripsi')
                         <p class="form-error" id="deskripsi-error">{{ $message }}</p>
                     @enderror
