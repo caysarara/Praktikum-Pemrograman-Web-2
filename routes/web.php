@@ -34,7 +34,6 @@ Route::get('/education', function () {
     return view('education');
 })->name('education');
 
-Route::resource('projects', ProjectController::class)
-    ->only(['index', 'create', 'store', 'show']);
+Route::resource('projects', ProjectController::class);
 
 

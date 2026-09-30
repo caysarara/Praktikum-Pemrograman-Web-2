@@ -8,6 +8,10 @@
         <h1>{{ $project->nama }}</h1>
     </section>
 
+    @if (session('success'))
+        <div class="alert alert-success" role="status">{{ session('success') }}</div>
+    @endif
+
     <section class="section">
         <div class="detail-card">
             <div class="detail-block">
@@ -26,6 +30,21 @@
                 @else
                     <p class="detail-text detail-empty">Belum ada data teknologi.</p>
                 @endif
+            </div>
+         
+            <div class="detail-block">
+                <div class="action-group">
+                    <a href="{{ route('projects.edit', $project) }}" class="btn btn-primary">Edit</a>
+
+                    <form method="POST"
+                          action="{{ route('projects.destroy', $project) }}"
+                          class="inline-form"
+                          data-confirm="Yakin ingin menghapus project &quot;{{ $project->nama }}&quot;?">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>

@@ -17,8 +17,9 @@
             </li>
             <li>
                 <a href="{{ route('projects.index') }}"
-                   class="{{ request()->routeIs('projects') ? 'active' : '' }}">Projects</a>
+                   class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">Projects</a>
             </li>
         </ul>
     </nav>
 </header>
+  

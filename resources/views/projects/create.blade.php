@@ -29,6 +29,8 @@
                            placeholder="Contoh: Dungeon Battle: Rise of Hero">
                     @error('nama')
                         <p class="form-error">{{ $message }}</p>
+                    @else
+                        <p class="form-hint">Minimal 5 karakter.</p>
                     @enderror
                 </div>
 
@@ -41,6 +43,8 @@
                             </textarea>
                     @error('deskripsi')
                         <p class="form-error" id="deskripsi-error">{{ $message }}</p>
+                    @else
+                        <p class="form-hint" id="deskripsi-hint">Minimal 10 karakter.</p>
                     @enderror
                 </div>
 

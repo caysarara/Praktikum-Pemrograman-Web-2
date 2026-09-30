@@ -32,9 +32,20 @@
                     @endif
 
                     <div class="card-footer">
-                        <a href="{{ route('projects.show', $project) }}" class="card-link">
-                            Lihat Detail <span aria-hidden="true">&rarr;</span>
-                        </a>
+                        <div class="card-actions">
+                            <a href="{{ route('projects.show', $project) }}" class="card-link">
+                                Lihat Detail<span aria-hidden="true">&rarr;</span>
+                            </a>
+                           
+                            <div class="action-group">
+                                <a href="{{ route('projects.edit', $project) }}" class="btn btn-outline btn-sm">Edit</a>
+                                <form method="POST" action="{{ route('projects.destroy', $project) }}" class="inline-form" data-confirm="Apakah Anda yakin ingin menghapus proyek ini?">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </article>
             @empty
