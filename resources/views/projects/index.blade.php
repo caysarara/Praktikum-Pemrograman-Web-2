@@ -9,17 +9,28 @@
             <h1>Projects</h1>
             <p class="page-lead">Kumpulan proyek yang pernah saya kerjakan.</p>
         </div>
-        <a href="{{ route('projects.create') }}" class="btn btn-primary">Tambah Project</a>
+         <div class="action-group">
+            <a href="{{ route('projects.trash') }}" class="btn btn-outline">Trash ({{ $trashedCount }})</a>
+            <a href="{{ route('projects.create') }}" class="btn btn-primary">Tambah Project</a>
+        </div>
     </section>
 
     @if (session('success'))
         <div class="alert alert-success" role="status">{{ session('success') }}</div>
     @endif
 
+    <div class="filter-tabs">
+        <a href="{{ route('projects.index') }}"
+           class="{{ request('status') !== 'published' ? 'active' : '' }}">Semua</a>
+        <a href="{{ route('projects.index', ['status' => 'published']) }}"
+           class="{{ request('status') === 'published' ? 'active' : '' }}">Published</a>
+    </div>
+
     <section class="section">
         <div class="project-grid">
             @forelse($projects as $project)
                 <article class="project-card">
+                    <span class="badge badge-sm badge-status badge-{{ $project->status }}">{{ ucfirst($project->status) }}</span>
                     <h3>{{ $project->nama }}</h3>
                     <p>{{ $project->deskripsi }}</p>
 

@@ -62,6 +62,18 @@
                     @enderror
                 </div>
 
+                <div class="form-group">
+                    <label for="status" class="form-label">Status <span class="req" aria-hidden="true">*</span></label>
+                    <select id="status" name="status"
+                            class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}">
+                        <option value="draft" {{ old('status', 'published') === 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="published" {{ old('status', 'published') === 'published' ? 'selected' : '' }}>Published</option>
+                    </select>
+                    @error('status')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Simpan Project</button>
                     <a href="{{ route('projects.index') }}" class="btn btn-outline">Kembali</a>

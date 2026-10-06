@@ -20,6 +20,11 @@
             </div>
 
             <div class="detail-block">
+                <h3 class="detail-label">Status</h3>
+                <span class="badge badge-status badge-{{ $project->status }}">{{ ucfirst($project->status) }}</span>
+            </div>
+
+            <div class="detail-block">
                 <h3 class="detail-label">Teknologi / Stack</h3>
                 @if (!empty($project->stack))
                     <div class="badge-list">
