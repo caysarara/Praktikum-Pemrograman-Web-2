@@ -715,3 +715,77 @@ textarea.form-control {
     color: var(--color-muted);
     margin: 0 0 0.75rem;
 }
+
+/* ===== Pencarian, Nomor Urut, dan Pagination  ===== */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.toolbar-search {
+    flex: 1 1 240px;
+    width: auto;
+}
+
+.toolbar-select {
+    flex: 0 0 auto;
+    width: auto;
+}
+
+.card-number {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    margin-bottom: 0.25rem;
+}
+
+.pagination-info {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+.pagination {
+    margin-top: 1rem;
+}
+
+.pagination-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-item {
+    display: inline-block;
+    min-width: 2.2rem;
+    padding: 0.4rem 0.8rem;
+    text-align: center;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+a.page-item:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.page-item.active {
+    color: #fff;
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.page-item.disabled {
+    color: #9ca3af;
+    background-color: var(--color-bg);
+}

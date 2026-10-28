@@ -5,7 +5,7 @@
 @section('content')
     <section class="page-header page-header-row">
         <div>
-            <p class="eyebrow">Portfolio</p>
+            <p class="eyebrow">Portofolio</p>
             <h1>Projects</h1>
             <p class="page-lead">Kumpulan proyek yang pernah saya kerjakan.</p>
         </div>
@@ -20,11 +20,35 @@
     @endif
 
     <div class="filter-tabs">
-        <a href="{{ route('projects.index') }}"
+        <a href="{{ route('projects.index', request()->only(['search', 'per_page'])) }}"
            class="{{ request('status') !== 'published' ? 'active' : '' }}">Semua</a>
-        <a href="{{ route('projects.index', ['status' => 'published']) }}"
+        <a href="{{ route('projects.index', array_merge(request()->only(['search', 'per_page']), ['status' => 'published'])) }}"
            class="{{ request('status') === 'published' ? 'active' : '' }}">Published</a>
     </div>
+
+    <form method="GET" action="{{ route('projects.index') }}" class="toolbar">
+        @if (request('status') === 'published')
+            <input type="hidden" name="status" value="published">
+        @endif
+
+        <input type="search" name="search" value="{{ $search }}"
+               class="form-control toolbar-search" placeholder="Cari judul project..."
+               aria-label="Cari judul project">
+
+        <select name="per_page" class="form-control toolbar-select"
+                aria-label="Jumlah data per halaman" onchange="this.form.submit()">
+            @foreach ([5, 10, 25] as $size)
+                <option value="{{ $size }}" @selected($perPage === $size)>{{ $size }} per halaman</option>
+            @endforeach
+        </select>
+
+        <button type="submit" class="btn btn-primary btn-sm">Cari</button>
+
+        @if ($search !== '')
+            <a href="{{ route('projects.index', array_filter(['status' => request('status'), 'per_page' => $perPage])) }}"
+               class="btn btn-outline btn-sm">Reset</a>
+        @endif
+    </form>
 
     <section class="section">
         <div class="project-grid">
@@ -66,8 +90,18 @@
                 </div>
             @endforelse
         </div>
+
+        <div class="pagination-info">
+            Halaman : {{ $projects->currentPage() }} dari {{ $projects->lastPage() }} <br>
+            Jumlah Data : {{ $projects->total() }} <br>
+            Data Per Halaman : {{ $projects->perPage() }}
+        </div>
+
+        {{ $projects->links() }}
     </section>
 @endsection
+
+
 
 @push('scripts')
     <script>console.log('Halaman projects dimuat');</script>

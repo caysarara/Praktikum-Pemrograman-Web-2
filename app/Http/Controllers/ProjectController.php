@@ -11,16 +11,27 @@ class ProjectController extends Controller
 {
     public function index(Request $request): View
     {
+
+        $perPage = in_array((int) $request->query('per_page'), [5, 10, 25], true)
+            ? (int) $request->query('per_page')
+            : 10;
+
+        $search = trim((string) $request->query('search', ''));
+
         $query = Project::orderBy('id');
 
         if ($request->query('status') === 'published') {
             $query->published();
         }
 
-        $projects = $query->get();
+        if ($search !== '') {
+            $query->where('nama', 'like', '%' . $search . '%');
+        }
+
+        $projects = $query->paginate($perPage)->withQueryString();
         $trashedCount = Project::onlyTrashed()->count();
 
-        return view('projects.index', compact('projects', 'trashedCount'));
+        return view('projects.index', compact('projects', 'trashedCount', 'search', 'perPage'));
     }
 
     public function create(): View
