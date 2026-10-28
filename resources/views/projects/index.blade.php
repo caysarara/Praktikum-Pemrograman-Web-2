@@ -90,14 +90,15 @@
                 </div>
             @endforelse
         </div>
+        <div class="pagination-bar">
+            <div class="pagination-info">
+                Halaman : {{ $projects->currentPage() }} dari {{ $projects->lastPage() }} <br>
+                Jumlah Data : {{ $projects->total() }} <br>
+                Data Per Halaman : {{ $projects->perPage() }}
+            </div>
 
-        <div class="pagination-info">
-            Halaman : {{ $projects->currentPage() }} dari {{ $projects->lastPage() }} <br>
-            Jumlah Data : {{ $projects->total() }} <br>
-            Data Per Halaman : {{ $projects->perPage() }}
+            {{ $projects->links() }}
         </div>
-
-        {{ $projects->links() }}
     </section>
 @endsection
 
