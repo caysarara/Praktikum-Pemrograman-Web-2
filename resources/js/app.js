@@ -1,13 +1,7 @@
 import './bootstrap';
 
-document.addEventListener('submit', function (event) {
-    const form = event.target;
+import Alpine from 'alpinejs';
 
-    if (form.matches('form[data-confirm]')) {
-        const pesan = form.dataset.confirm || 'Yakin ingin melanjutkan?';
+window.Alpine = Alpine;
 
-        if (!window.confirm(pesan)) {
-            event.preventDefault(); 
-        }
-    }
-});
+Alpine.start();
