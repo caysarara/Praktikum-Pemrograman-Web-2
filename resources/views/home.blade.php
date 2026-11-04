@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.portfolio')
 
 @section('title', 'Home - Portfolio Caysa')
 

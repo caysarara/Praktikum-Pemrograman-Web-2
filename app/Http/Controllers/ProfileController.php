@@ -11,6 +11,13 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function saya(Request $request): View
+    {
+        return view('profile.saya', [
+            'user' => $request->user(),
+        ]);
+    }
+    
     /**
      * Display the user's profile form.
      */
