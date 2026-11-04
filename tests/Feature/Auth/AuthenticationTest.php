@@ -27,7 +27,8 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        // user biasa diarahkan ke halaman profil-nya (admin ke /post/projects)
+        $response->assertRedirect(route('profile.saya', absolute: false));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
