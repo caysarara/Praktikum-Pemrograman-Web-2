@@ -1,20 +1,23 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Selamat datang,') }} {{ Auth::user()->name }}!
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+@section('title', 'Dashboard - Portfolio Caysa')
+
+@section('content')
+    <div>
+        <div class="space-y-6">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Selamat datang, {{ Auth::user()->name }}!
+            </h2>
 
             {{-- Titik dua (:value) = isi dengan variabel PHP, bukan teks biasa --}}
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <x-stat-card label="Total Projects" :value="$totalProjects" />
                 <x-stat-card label="Published"      :value="$publishedCount" color="text-green-600" />
                 <x-stat-card label="Draft"          :value="$draftCount" color="text-yellow-600" />
                 <x-stat-card label="Categories"     :value="$totalCategories" color="text-purple-600" />
+                <x-stat-card label="Technologies"   :value="$totalTechnologies" color="text-blue-600" />
                 <x-stat-card label="Skills"         :value="$totalSkills" color="text-orange-600" />
+                
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -80,4 +83,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

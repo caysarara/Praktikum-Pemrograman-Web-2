@@ -1,4 +1,4 @@
-@extends('layouts.portfolio')
+@extends('layouts.app')
 
 @section('title', 'Skills - Portfolio Caysa')
 
@@ -10,7 +10,7 @@
             <p class="page-lead">Kelola daftar skill dan levelnya (0-100).</p>
         </div>
         <div class="action-group">
-            <a href="{{ route('dashboard') }}" class="btn btn-outline">Dashboard</a>
+            <a href="{{ route('post.dashboard.index') }}" class="btn btn-outline">Dashboard</a>
             <a href="{{ route('skills.create') }}" class="btn btn-primary">Tambah Skill</a>
         </div>
     </section>

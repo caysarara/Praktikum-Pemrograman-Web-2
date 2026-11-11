@@ -51,7 +51,7 @@ class ProjectGalleryController extends Controller
 
     public function update(Request $request, Project $project, ProjectImage $image): RedirectResponse
     {
-        abort_if($image->project_id !== $project->id, 404);
+        abort_if($image->project_id != $project->id, 404);
 
         $validated = $request->validate([
             'caption' => 'nullable|string|max:255',
@@ -66,7 +66,7 @@ class ProjectGalleryController extends Controller
 
     public function destroy(Project $project, ProjectImage $image): RedirectResponse
     {
-        abort_if($image->project_id !== $project->id, 404);
+        abort_if($image->project_id != $project->id, 404);
 
         Storage::disk('public')->delete($image->image);
         $image->delete();

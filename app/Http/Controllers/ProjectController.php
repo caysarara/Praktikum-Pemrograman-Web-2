@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -41,7 +43,7 @@ class ProjectController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate($this->rules(), $this->messages());
+       $validated = $request->validate($this->rules(), $this->messages());
 
         $data = $this->payload($validated);
 

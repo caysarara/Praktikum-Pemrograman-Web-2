@@ -21,9 +21,9 @@ Route::get('/projects/{project}', [PortfolioController::class, 'show'])->name('p
 
 // wajib login
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix('post')->name('post.')->middleware('auth')->group(function () {
+    Route::resource('dashboard', DashboardController::class)->only(['index']);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -46,7 +46,7 @@ Route::prefix('post')->middleware(['auth', 'admin'])->group(function () {
     Route::delete('projects/{project}/images/{image}', [ProjectGalleryController::class, 'destroy'])->name('projects.images.destroy');
 
     Route::resource('projects', ProjectController::class);
-        Route::resource('skills', SkillController::class)->except('show');
+    Route::resource('skills', SkillController::class)->except('show');
 });
 
 require __DIR__.'/auth.php';

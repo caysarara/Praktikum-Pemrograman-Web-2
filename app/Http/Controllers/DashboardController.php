@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\{Category, Project, Skill, Technology};
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
@@ -19,7 +19,7 @@ return view('dashboard', [
                                     ->orderByDesc('projects_count')
                                     ->orderBy('name')
                                     ->get(),
-
+            'totalTechnologies' => Technology::count(),
             'topSkills'       => Skill::orderByDesc('level')->orderBy('name')->take(5)->get(),
             'latestProjects'  => Project::with('category')->latest()->take(5)->get(),
             ]);

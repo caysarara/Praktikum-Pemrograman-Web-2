@@ -13,7 +13,7 @@
             hingga tampilan antarmuka.
         </p>
         <div class="hero-actions">
-            <a href="{{ route('projects.index') }}" class="btn btn-primary">Lihat Proyek</a>
+            <a href="{{ route('portfolio.projects') }}" class="btn btn-primary">Lihat Proyek</a>
             <a href="{{ route('about') }}" class="btn btn-outline">Tentang Saya</a>
         </div>
     </section>

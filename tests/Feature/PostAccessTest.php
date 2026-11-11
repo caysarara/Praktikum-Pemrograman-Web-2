@@ -61,16 +61,16 @@ class PostAccessTest extends TestCase
         $this->get('/')->assertDontSee('Halo, Budi Santoso');
     }
 
-    public function test_admin_login_goes_to_projects_and_user_login_to_profile_saya(): void
+    public function test_admin_and_user_login_go_to_dashboard(): void
     {
         $admin = User::factory()->admin()->create();
         $this->post('/login', ['email' => $admin->email, 'password' => 'password'])
-            ->assertRedirect('/post/projects');
+            ->assertRedirect('/post/dashboard');
         $this->post('/logout');
 
         $user = User::factory()->create();
         $this->post('/login', ['email' => $user->email, 'password' => 'password'])
-            ->assertRedirect('/post/profile-saya');
+            ->assertRedirect('/post/dashboard');
     }
 
     public function test_wrong_password_shows_error_and_stays_guest(): void

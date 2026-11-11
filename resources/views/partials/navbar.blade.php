@@ -20,17 +20,11 @@
                    class="{{ request()->routeIs('portfolio.projects') ? 'active' : '' }}">Projects</a>
             </li>
 
-            {{-- Menu Projects disembunyikan untuk user login non-admin (akan 403) --}}
-            @if (! Auth::check() || Auth::user()->role === 'admin')
-            <li>
-                <a href="{{ route('projects.index') }}"
-                   class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">Kelola Project</a>
-            </li>
-            @endif
+
             @auth
             <li>
-                <a href="{{ route('dashboard') }}"
-                   class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                <a href="{{ route('post.dashboard.index') }}"
+                   class="{{ request()->routeIs('post.dashboard.*') ? 'active' : '' }}">Dashboard</a>
             </li>
             @endauth
         </ul>

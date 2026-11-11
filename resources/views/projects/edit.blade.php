@@ -1,4 +1,4 @@
-@extends('layouts.portfolio')
+@extends('layouts.app')
 
 @section('title', 'Edit ' . $project->nama . ' - Portfolio Caysa')
 
@@ -19,7 +19,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('projects.update', $project) }}">
+            <form method="POST" action="{{ route('projects.update', $project) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
