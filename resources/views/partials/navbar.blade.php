@@ -15,13 +15,24 @@
                 <a href="{{ route('education') }}"
                    class="{{ request()->routeIs('education') ? 'active' : '' }}">Education</a>
             </li>
+            <li>
+                <a href="{{ route('portfolio.projects') }}"
+                   class="{{ request()->routeIs('portfolio.projects') ? 'active' : '' }}">Projects</a>
+            </li>
+
             {{-- Menu Projects disembunyikan untuk user login non-admin (akan 403) --}}
             @if (! Auth::check() || Auth::user()->role === 'admin')
             <li>
                 <a href="{{ route('projects.index') }}"
-                   class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">Projects</a>
+                   class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">Kelola Project</a>
             </li>
             @endif
+            @auth
+            <li>
+                <a href="{{ route('dashboard') }}"
+                   class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+            </li>
+            @endauth
         </ul>
 
         <div class="nav-auth">

@@ -54,7 +54,13 @@
         <div class="project-grid">
             @forelse($projects as $project)
                 <article class="project-card">
+                    @if ($project->thumbnail)
+                        <img src="{{ asset('storage/' . $project->thumbnail) }}" alt="{{ $project->nama }}" class="card-thumb">
+                    @endif
                     <span class="badge badge-sm badge-status badge-{{ $project->status }}">{{ ucfirst($project->status) }}</span>
+                    @if ($project->category)
+                        <span class="badge badge-sm">{{ $project->category->name }}</span>
+                    @endif
                     <h3>{{ $project->nama }}</h3>
                     <p>{{ $project->deskripsi }}</p>
 

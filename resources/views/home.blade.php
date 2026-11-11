@@ -29,7 +29,7 @@
                 <h3>Education</h3>
                 <p>Riwayat pendidikan dan mata kuliah yang ditempuh.</p>
             </a>
-            <a href="{{ route('projects.index') }}" class="link-card">
+            <a href="{{ route('portfolio.projects') }}" class="link-card">
                 <h3>Projects</h3>
                 <p>Kumpulan proyek yang pernah saya kerjakan.</p>
             </a>

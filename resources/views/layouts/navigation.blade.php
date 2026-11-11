@@ -12,11 +12,13 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">Home</x-nav-link>
                     <x-nav-link :href="route('about')" :active="request()->routeIs('about')">About</x-nav-link>
                     <x-nav-link :href="route('education')" :active="request()->routeIs('education')">Education</x-nav-link>
                     @if (Auth::user()->role === 'admin')
                         <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">Projects</x-nav-link>
+                        <x-nav-link :href="route('skills.index')" :active="request()->routeIs('skills.*')">Skills</x-nav-link>
                     @endif
                 </div>
             </div>
@@ -70,11 +72,13 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">Home</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">About</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('education')" :active="request()->routeIs('education')">Education</x-responsive-nav-link>
             @if (Auth::user()->role === 'admin')
                 <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">Projects</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('skills.index')" :active="request()->routeIs('skills.*')">Skills</x-responsive-nav-link>
             @endif
         </div>
 

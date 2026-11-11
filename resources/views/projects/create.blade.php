@@ -6,7 +6,7 @@
     <section class="page-header">
         <p class="eyebrow">Portfolio</p>
         <h1>Tambah Project</h1>
-        <p class="page-lead">Isi form di bawah untuk menambahkan project baru ke portfolio.</p>
+        <p class="page-lead">Isi form di bawah untuk menambahkan project baru ke portofolio.</p>
     </section>
 
     <section class="section">
@@ -37,8 +37,7 @@
                     <label for="deskripsi" class="form-label">Deskripsi <span class="req" aria-hidden="true">*</span></label>
                     <textarea id="deskripsi" name="deskripsi" rows="5"
                               class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}"
-                              placeholder="Jelaskan project ini secara singkat">{{ old('deskripsi') }}
-                            </textarea>
+                              placeholder="Jelaskan project ini secara singkat">{{ old('deskripsi') }} </textarea>
                     @error('deskripsi')
                         <p class="form-error" id="deskripsi-error">{{ $message }}</p>
                     @else
@@ -61,6 +60,20 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="category_id" class="form-label">Kategori</label>
+                    <select id="category_id" name="category_id"
+                            class="form-control {{ $errors->has('category_id') ? 'is-invalid' : '' }}">
+                        <option value="">Pilih kategori</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" @selected((string) old('category_id', null) === (string) $category->id)>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="form-group">
                     <label for="status" class="form-label">Status <span class="req" aria-hidden="true">*</span></label>
                     <select id="status" name="status"
                             class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}">
@@ -69,6 +82,17 @@
                     </select>
                     @error('status')
                         <p class="form-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="thumbnail" class="form-label">Thumbnail</label>
+                    <input type="file" id="thumbnail" name="thumbnail" accept="image/jpeg,image/png,image/webp"
+                           class="form-control {{ $errors->has('thumbnail') ? 'is-invalid' : '' }}">
+                    @error('thumbnail')
+                        <p class="form-error">{{ $message }}</p>
+                    @else
+                        <p class="form-hint">Opsional. JPG, PNG, atau WEBP. Maksimal 2 MB, minimal 400 x 300 px.</p>
                     @enderror
                 </div>
 

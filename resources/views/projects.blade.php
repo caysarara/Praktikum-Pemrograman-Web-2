@@ -2,7 +2,7 @@
 
 @section('title', 'Projects - Portfolio Caysa')
 
-@php
+<!-- @php
     $projects = [
         [
             'nama' => 'Dungeon Battle: Rise of Hero',
@@ -16,7 +16,7 @@
         ],
         // Tambahkan proyek lain di sini
     ];
-@endphp
+@endphp -->
 
 @section('content')
     <section class="page-header">
@@ -27,15 +27,31 @@
     <section class="section">
         <div class="project-grid">
             @forelse($projects as $project)
-                <div class="project-card">
-                    <h3>{{ $project['nama'] }}</h3>
-                    <p>{{ $project['deskripsi'] }}</p>
-                    <div class="badge-list">
-                        @foreach($project['stack'] as $tech)
-                            <span class="badge badge-sm">{{ $tech }}</span>
-                        @endforeach
+                <article class="project-card">
+                    @if ($project->thumbnail)
+                        <img src="{{ asset('storage/' . $project->thumbnail) }}" alt="{{ $project->nama }}" class="card-thumb">
+                    @endif
+
+                    @if ($project->category)
+                        <span class="badge badge-sm">{{ $project->category->name }}</span>
+                    @endif
+                    <h3>{{ $project->nama }}</h3>
+                    <p>{{ $project->deskripsi }}</p>
+
+                    @if (!empty($project->stack))
+                        <div class="badge-list">
+                            @foreach($project->stack as $tech)
+                                <span class="badge badge-sm">{{ $tech }}</span>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div class="card-footer">
+                        <a href="{{ route('portfolio.projects.show', $project) }}" class="card-link">
+                            Lihat Detail<span aria-hidden="true">&rarr;</span>
+                        </a>
                     </div>
-                </div>
+                </article>
             @empty
                 <p>Belum ada data proyek.</p>
             @endforelse

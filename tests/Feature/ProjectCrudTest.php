@@ -21,6 +21,15 @@ class ProjectCrudTest extends TestCase
         ], $override);
     }
 
+    private function makeProject(array $override = []): Project
+{
+    return Project::create(array_merge(
+        $this->payload(),
+        ['stack' => ['Java', 'Java Swing']],   // array, sesuai cast model
+        $override
+    ));
+}
+
     protected function setUp(): void
     {
         parent::setUp();

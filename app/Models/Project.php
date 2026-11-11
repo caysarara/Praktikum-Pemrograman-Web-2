@@ -10,11 +10,15 @@ class Project extends Model
 {
     use SoftDeletes;
 
+    public const MAX_GALLERY_IMAGES = 10;
+
     protected $fillable = [
         'nama',
         'deskripsi',
         'stack',
         'status',
+        'category_id',
+        'thumbnail',
     ];
 
     protected $casts = [
@@ -24,5 +28,20 @@ class Project extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', 'published');
+    }
+
+    public function scopeDraft(Builder $query): Builder
+    {
+        return $query->where('status', 'draft');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProjectImage::class)->orderBy('sort_order');
     }
 }

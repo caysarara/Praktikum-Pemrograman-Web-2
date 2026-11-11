@@ -18,7 +18,7 @@ class ProjectController extends Controller
 
         $search = trim((string) $request->query('search', ''));
 
-        $query = Project::orderBy('id');
+        $query = Project::with('category')->orderBy('id');
 
         if ($request->query('status') === 'published') {
             $query->published();
@@ -36,38 +36,20 @@ class ProjectController extends Controller
 
     public function create(): View
     {
-        return view('projects.create');
+        return view('projects.create', ['categories' => Category::orderBy('name')->get()]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama'      => 'required|string|min:5|max:255',
-            'deskripsi' => 'required|string|min:10',
-            'stack'     => 'nullable|string',
-            'status'    => 'required|in:draft,published',
-        ], [
-            'nama.required'      => 'Nama project wajib diisi.',
-            'nama.min'           => 'Nama project minimal 5 karakter.',
-            'nama.max'           => 'Nama project maksimal 255 karakter.',
-            'deskripsi.required' => 'Deskripsi wajib diisi.',
-            'deskripsi.min'      => 'Deskripsi minimal 10 karakter.',
-            'status.required'    => 'Status wajib dipilih.',
-            'status.in'          => 'Status harus draft atau published.',
-        ]);
-        
-        $stack = collect(explode(',', $validated['stack'] ?? ''))
-            ->map(fn ($item) => trim($item))
-            ->filter()
-            ->values()
-            ->all();
+        $request->validate($this->rules(), $this->messages());
 
-        Project::create([
-            'nama'      => $validated['nama'],
-            'deskripsi' => $validated['deskripsi'],
-            'stack'     => $stack,
-            'status'    => $validated['status'],
-        ]);
+        $data = $this->payload($validated);
+
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail'] = $request->file('thumbnail')->store('projects/thumbnails', 'public');
+        }
+
+        Project::create($data);
 
         return redirect()
             ->route('projects.index')
@@ -76,47 +58,42 @@ class ProjectController extends Controller
 
     public function show(Project $project): View
     {
+        $project->load(['category', 'images']);
         return view('projects.show', compact('project'));
     }
 
     public function edit(Project $project): View
     {
-        return view('projects.edit', compact('project'));
+        $project->load('images');
+
+        return view('projects.edit', [
+            'project'    => $project,
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
-        public function update(Request $request, Project $project): RedirectResponse
+    public function update(Request $request, Project $project): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama'      => 'required|string|min:5|max:255',
-            'deskripsi' => 'required|string|min:10',
-            'stack'     => 'nullable|string',
-            'status'    => 'required|in:draft,published',
-        ], [
-            'nama.required'      => 'Nama project wajib diisi.',
-            'nama.min'           => 'Nama project minimal 5 karakter.',
-            'nama.max'           => 'Nama project maksimal 255 karakter.',
-            'deskripsi.required' => 'Deskripsi wajib diisi.',
-            'deskripsi.min'      => 'Deskripsi minimal 10 karakter.',
-            'status.required'    => 'Status wajib dipilih.',
-            'status.in'          => 'Status harus draft atau published.',
-        ]);
+        $validated = $request->validate($this->rules(), $this->messages());
 
-        $stack = collect(explode(',', $validated['stack'] ?? ''))
-            ->map(fn ($item) => trim($item))
-            ->filter()
-            ->values()
-            ->all();
+        $data = $this->payload($validated);
 
-        $project->update([
-            'nama'      => $validated['nama'],
-            'deskripsi' => $validated['deskripsi'],
-            'stack'     => $stack,
-            'status'    => $validated['status'],
-        ]);
+        $oldThumbnail = $project->thumbnail;
+
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail'] = $request->file('thumbnail')->store('projects/thumbnails', 'public');
+        }
+
+        $project->update($data);
+
+        if ($request->hasFile('thumbnail') && $oldThumbnail) {
+            Storage::disk('public')->delete($oldThumbnail);
+        }
 
         return redirect()
             ->route('projects.show', $project)
             ->with('success', 'Project berhasil diperbarui.');
+
     }
 
         public function destroy(Project $project): RedirectResponse
@@ -148,11 +125,67 @@ class ProjectController extends Controller
 
     public function forceDelete(int $id): RedirectResponse
     {
-        $project = Project::onlyTrashed()->findOrFail($id);
+        $project = Project::onlyTrashed()->with('images')->findOrFail($id);
+
+        if ($project->thumbnail) {
+            Storage::disk('public')->delete($project->thumbnail);
+        }
+
+        foreach ($project->images as $image) {
+            Storage::disk('public')->delete($image->image);
+        }
+
         $project->forceDelete();
 
         return redirect()
             ->route('projects.trash')
             ->with('success', 'Project dihapus permanen.');
+    }
+
+    private function rules(): array
+    {
+        return [
+            'nama'        => 'required|string|min:5|max:255',
+            'deskripsi'   => 'required|string|min:10',
+            'stack'       => 'nullable|string',
+            'status'      => 'required|in:draft,published',
+            'category_id' => 'nullable|exists:categories,id',
+            'thumbnail'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048|dimensions:min_width=400,min_height=300',
+        ];
+    }
+
+    private function messages(): array
+    {
+        return [
+            'nama.required'        => 'Nama project wajib diisi.',
+            'nama.min'             => 'Nama project minimal 5 karakter.',
+            'nama.max'             => 'Nama project maksimal 255 karakter.',
+            'deskripsi.required'   => 'Deskripsi wajib diisi.',
+            'deskripsi.min'        => 'Deskripsi minimal 10 karakter.',
+            'status.required'      => 'Status wajib dipilih.',
+            'status.in'            => 'Status harus draft atau published.',
+            'category_id.exists'   => 'Kategori yang dipilih tidak ditemukan.',
+            'thumbnail.image'      => 'Thumbnail harus berupa gambar.',
+            'thumbnail.mimes'      => 'Thumbnail harus berformat jpg, jpeg, png, atau webp.',
+            'thumbnail.max'        => 'Ukuran thumbnail maksimal 2 MB.',
+            'thumbnail.dimensions' => 'Thumbnail minimal 400 x 300 px.',
+        ];
+    }
+
+    private function payload(array $validated): array
+    {
+        $stack = collect(explode(',', $validated['stack'] ?? ''))
+            ->map(fn ($item) => trim($item))
+            ->filter()
+            ->values()
+            ->all();
+
+        return [
+            'nama'        => $validated['nama'],
+            'deskripsi'   => $validated['deskripsi'],
+            'stack'       => $stack,
+            'status'      => $validated['status'],
+            'category_id' => $validated['category_id'] ?? null,
+        ];
     }
 }
