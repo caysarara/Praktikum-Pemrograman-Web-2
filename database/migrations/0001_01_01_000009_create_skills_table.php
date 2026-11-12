@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->unsignedTinyInteger('level')->default(50); // 0-100, dipakai untuk "Skill Teratas"
+            $table->unsignedTinyInteger('level')->default(50); 
             $table->timestamps();
         });
     }
