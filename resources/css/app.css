@@ -919,3 +919,19 @@ a.page-item:hover {
     flex: 1;
     min-width: 0;
 }
+
+/* ===== Checkbox technologies di form ===== */
+.check-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-top: 0.25rem;
+}
+
+.check-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+}

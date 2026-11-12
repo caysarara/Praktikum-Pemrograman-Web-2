@@ -37,9 +37,10 @@
 
             <div class="detail-block">
                 <h3 class="detail-label">Teknologi / Stack</h3>
-                @if (!empty($project->stack))
+                @php($techNames = $project->technologyNames())
+                @if ($techNames->isNotEmpty())
                     <div class="badge-list">
-                        @foreach($project->stack as $tech)
+                        @foreach ($techNames as $tech)
                             <span class="badge">{{ $tech }}</span>
                         @endforeach
                     </div>

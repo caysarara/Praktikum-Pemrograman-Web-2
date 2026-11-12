@@ -46,15 +46,35 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="stack" class="form-label">Stack / Teknologi</label>
-                    <input type="text" id="stack" name="stack"
-                           value="{{ old('stack') }}"
-                           class="form-control {{ $errors->has('stack') ? 'is-invalid' : '' }}"
-                           placeholder="Java, Java Swing"
-                           aria-describedby="stack-hint @error('stack') stack-error @enderror" 
-                           @error('stack') aria-invalid="true" @enderror>
-                    <p class="form-hint">Pisahkan tiap teknologi dengan koma. Boleh dikosongkan.</p>
-                    @error('stack')
+                    <label for="short_description" class="form-label">Deskripsi Singkat</label>
+                    <input type="text" id="short_description" name="short_description" maxlength="255"
+                           value="{{ old('short_description') }}"
+                           class="form-control {{ $errors->has('short_description') ? 'is-invalid' : '' }}"
+                           placeholder="Ringkasan satu kalimat untuk kartu project">
+                    @error('short_description')
+                        <p class="form-error">{{ $message }}</p>
+                    @else
+                        <p class="form-hint">Tampil di kartu project dan meta description. Maksimal 255 karakter.</p>
+                    @enderror
+                </div>
+
+                div class="form-group">
+                    <span class="form-label">Technologies</span>
+                    <div class="check-grid">
+                        @forelse ($technologies as $technology)
+                            <label class="check-item">
+                                <input type="checkbox" name="technologies[]" value="{{ $technology->id }}"
+                                       @checked(in_array($technology->id, old('technologies', [])))>
+                                {{ $technology->name }}
+                            </label>
+                        @empty
+                            <p class="form-hint">Belum ada data technology.</p>
+                        @endforelse
+                    </div>
+                    @error('technologies')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                    @error('technologies.*')
                         <p class="form-error">{{ $message }}</p>
                     @enderror
                 </div>
@@ -83,6 +103,46 @@
                     @error('status')
                         <p class="form-error">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="project_date" class="form-label">Tanggal Project</label>
+                    <input type="date" id="project_date" name="project_date"
+                           value="{{ old('project_date') }}"
+                           class="form-control {{ $errors->has('project_date') ? 'is-invalid' : '' }}">
+                    @error('project_date')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror  
+                </div>
+
+                <div class="form-group">
+                    <label for="project_url" class="form-label">URL Project</label>
+                    <input type="url" id="project_url" name="project_url"
+                           value="{{ old('project_url') }}"
+                           class="form-control {{ $errors->has('project_url') ? 'is-invalid' : '' }}"
+                           placeholder="Contoh: https://example.com">
+                    @error('project_url')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="repository_url" class="form-label">URL Repository</label>
+                    <input type="url" id="repository_url" name="repository_url"
+                           value="{{ old('repository_url') }}"
+                           class="form-control {{ $errors->has('repository_url') ? 'is-invalid' : '' }}"
+                           placeholder="Contoh: https://github.com/user/repo">
+                    @error('repository_url')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="check-item">
+                        <input type="hidden" name="is_featured" value="0">
+                        <input type="checkbox" name="is_featured" value="1" @checked((bool) old('is_featured'))>
+                        Tampilkan sebagai project unggulan
+                    </label>
                 </div>
 
                 <div class="form-group">

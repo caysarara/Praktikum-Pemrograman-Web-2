@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Project;
+use App\Models\Technology;
 use Illuminate\Database\Seeder;
 
 class ProjectSeeder extends Seeder
@@ -18,6 +19,9 @@ class ProjectSeeder extends Seeder
                 start screen.',
                 'stack' => ['Java', 'Java Swing'],
                 'category' => 'Game',
+                'short_description' => 'Game RPG berbasis Java Swing dengan sistem battle dan world map.',
+                'project_date' => '2024-06-15',
+                'status' => 'published',
             ],
             [
                 'nama' => 'Bank Sampah Digital',
@@ -25,6 +29,9 @@ class ProjectSeeder extends Seeder
                 5 tabel database beserta view, stored procedure, trigger, dan function.',
                 'stack' => ['PHP', 'MySQL', 'Bootstrap'],
                 'category' => 'Web',
+                'short_description' => 'Aplikasi web pengelolaan bank sampah untuk praktikum Pemrograman Web.',
+                'project_date' => '2025-01-20',
+                'status' => 'published',
             ],
 
         ];
@@ -33,7 +40,10 @@ class ProjectSeeder extends Seeder
             $project['category_id'] = Category::where('name', $project['category'])->value('id');
             unset($project['category']);
 
-            Project::updateOrCreate(['nama' => $project['nama']], $project);
+            $model = Project::updateOrCreate(['nama' => $project['nama']], $project);
+
+            $model->technologies()->sync(Technology::whereIn('name', $project['stack'])->pluck('id'));
+
         }
     }
 }

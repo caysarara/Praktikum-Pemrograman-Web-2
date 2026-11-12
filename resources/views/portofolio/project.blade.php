@@ -1,6 +1,7 @@
 @extends('layouts.portfolio')
 
 @section('title', $project->nama . ' - Portfolio Caysa')
+@section('meta_description', $project->short_description ?: \Illuminate\Support\Str::limit($project->deskripsi, 150))
 
 @section('content')
     <a href="{{ route('portfolio.projects') }}" class="back-link"><span aria-hidden="true">&larr;</span> Kembali ke daftar project</a>
@@ -18,21 +19,49 @@
                 </div>
             @endif
 
+            @if ($project->short_description)
+                <div class="detail-block">
+                    <p class="detail-text">{{ $project->short_description }}</p>
+                </div>
+            @endif
+
             <div class="detail-block">
                 <h3 class="detail-label">Deskripsi</h3>
                 <p class="detail-text">{{ $project->deskripsi }}</p>
             </div>
 
-            @if (!empty($project->stack))
+            @if ($project->project_date)
+                <div class="detail-block">
+                    <h3 class="detail-label">Tanggal Project</h3>
+                    <p class="detail-text">{{ $project->project_date->translateFormat('d F Y') }}</p>
+                </div>
+            @endif
+
+            @php($techNames = $project->technologyNames())
+            @if ($techNames->isNotEmpty())
                 <div class="detail-block">
                     <h3 class="detail-label">Teknologi / Stack</h3>
                     <div class="badge-list">
-                        @foreach ($project->stack as $tech)
+                        @foreach ($techNames as $tech)
                             <span class="badge">{{ $tech }}</span>
                         @endforeach
                     </div>
                 </div>
             @endif
+
+            @if ($project->project_url || $project->repository_url)
+                <div class="detail-block">
+                    <div class="action-group">
+                        @if ($project->project_url)
+                            <a href="{{ $project->project_url }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Lihat Project</a>
+                        @endif
+                        @if ($project->repository_url)
+                            <a href="{{ $project->repository_url }}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">Repository</a>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
 
             @if ($project->images->isNotEmpty())
                 <div class="detail-block">

@@ -9,7 +9,7 @@ class TechnologySeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (['PHP', 'Laravel', 'MySQL', 'Java', 'Python', 'JavaScript', 'Tailwind CSS'] as $name) {
+        foreach (['PHP', 'Laravel', 'MySQL', 'Java', 'Python', 'JavaScript', 'Tailwind CSS', 'Bootstrap', 'Java Swing'] as $name) {
             Technology::firstOrCreate(['name' => $name]);
         }
     }

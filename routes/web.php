@@ -16,7 +16,7 @@ Route::view('/education', 'education')->name('education');
 
 // Portfolio publik: hanya project berstatus published
 Route::get('/projects', [PortfolioController::class, 'projects'])->name('portfolio.projects');
-Route::get('/projects/{project}', [PortfolioController::class, 'show'])->name('portfolio.projects.show');
+Route::get('/projects/{project:slug}', [PortfolioController::class, 'show'])->name('portfolio.projects.show');
 
 
 // wajib login

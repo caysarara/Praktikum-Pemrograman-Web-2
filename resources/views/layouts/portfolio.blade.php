@@ -6,6 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name', 'Portfolio Caysa'))</title>
+    @hasSection('meta-description')
+        <meta name="description" content="@yield('meta-description')">
+    @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

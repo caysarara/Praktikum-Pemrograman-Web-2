@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Project;
+use App\Models\Technology;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 
@@ -38,20 +40,26 @@ class ProjectController extends Controller
 
     public function create(): View
     {
-        return view('projects.create', ['categories' => Category::orderBy('name')->get()]);
+        return view('projects.create', [
+            'categories' => Category::orderBy('name')->get(),
+            'technologies' => Technology::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-       $validated = $request->validate($this->rules(), $this->messages());
+        $validated = $request->validate($this->rules(), $this->messages());
 
-        $data = $this->payload($validated);
+        $technologyIds = $validated['technology_ids'] ?? [];
+
+        $data = $this->payload($request, $validated, $technologyIds);
 
         if ($request->hasFile('thumbnail')) {
             $data['thumbnail'] = $request->file('thumbnail')->store('projects/thumbnails', 'public');
         }
 
-        Project::create($data);
+        $project = Project::create($data);
+        $project->technologies()->sync($technologyIds);
 
         return redirect()
             ->route('projects.index')
@@ -60,17 +68,18 @@ class ProjectController extends Controller
 
     public function show(Project $project): View
     {
-        $project->load(['category', 'images']);
+        $project->load(['category', 'technologies', 'images']);
         return view('projects.show', compact('project'));
     }
 
     public function edit(Project $project): View
     {
-        $project->load('images');
+        $project->load('images', 'technologies');
 
         return view('projects.edit', [
             'project'    => $project,
             'categories' => Category::orderBy('name')->get(),
+            'technologies' => Technology::orderBy('name')->get(),
         ]);
     }
 
@@ -78,7 +87,9 @@ class ProjectController extends Controller
     {
         $validated = $request->validate($this->rules(), $this->messages());
 
-        $data = $this->payload($validated);
+        $technologyIds = $validated['technology_ids'] ?? [];
+
+        $data = $this->payload($request, $validated, $technologyIds ?? []);
 
         $oldThumbnail = $project->thumbnail;
 
@@ -87,6 +98,7 @@ class ProjectController extends Controller
         }
 
         $project->update($data);
+        $project->technologies()->sync($technologyIds);
 
         if ($request->hasFile('thumbnail') && $oldThumbnail) {
             Storage::disk('public')->delete($oldThumbnail);
@@ -147,11 +159,19 @@ class ProjectController extends Controller
     private function rules(): array
     {
         return [
-            'nama'        => 'required|string|min:5|max:255',
+            'nama'        => ['required', 'string', 'min:5', 'max:255',
+                                Rule::unique('projects', 'nama')->ignore($project?->id)],
+            'short_description' => 'nullable|string|max:255',
             'deskripsi'   => 'required|string|min:10',
             'stack'       => 'nullable|string',
             'status'      => 'required|in:draft,published',
             'category_id' => 'nullable|exists:categories,id',
+            'technologies'      => 'nullable|array',
+            'technologies.*'    => 'exists:technologies,id',
+            'project_date'      => 'nullable|date',
+            'is_featured'       => 'nullable|boolean',
+            'project_url'       => 'nullable|url|max:255',
+            'repository_url'    => 'nullable|url|max:255',
             'thumbnail'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048|dimensions:min_width=400,min_height=300',
         ];
     }
@@ -162,11 +182,16 @@ class ProjectController extends Controller
             'nama.required'        => 'Nama project wajib diisi.',
             'nama.min'             => 'Nama project minimal 5 karakter.',
             'nama.max'             => 'Nama project maksimal 255 karakter.',
+            'nama.unique'          => 'Nama project sudah digunakan.',
             'deskripsi.required'   => 'Deskripsi wajib diisi.',
             'deskripsi.min'        => 'Deskripsi minimal 10 karakter.',
             'status.required'      => 'Status wajib dipilih.',
             'status.in'            => 'Status harus draft atau published.',
             'category_id.exists'   => 'Kategori yang dipilih tidak ditemukan.',
+            'technologies.*.exists'=> 'Teknologi yang dipilih tidak ditemukan.',
+            'project_date.date'    => 'Tanggal project tidak valid.',
+            'project_url.url'      => 'URL project harus diawali http:// atau https://.',
+            'repository_url.url'   => 'URL repository harus diawali http:// atau https://.',
             'thumbnail.image'      => 'Thumbnail harus berupa gambar.',
             'thumbnail.mimes'      => 'Thumbnail harus berformat jpg, jpeg, png, atau webp.',
             'thumbnail.max'        => 'Ukuran thumbnail maksimal 2 MB.',
@@ -174,20 +199,29 @@ class ProjectController extends Controller
         ];
     }
 
-    private function payload(array $validated): array
+    private function payload(Request $request, array $validated, array $technologyIds): array
     {
-        $stack = collect(explode(',', $validated['stack'] ?? ''))
-            ->map(fn ($item) => trim($item))
-            ->filter()
-            ->values()
-            ->all();
+        if(isset($validated['stack'])) {
+            $stack = collect(explode(',', $validated['stack']))
+                ->map(fn ($item) => trim($item))
+                ->filter()
+                ->values()
+                ->all();
+        } else {
+            $stack = Technology::whereIn('id', $technologyIds)->orderBy('name')->pluck('name')->all();
+        }
 
         return [
             'nama'        => $validated['nama'],
+            'short_description' => $validated['short_description'] ?? null,
             'deskripsi'   => $validated['deskripsi'],
             'stack'       => $stack,
             'status'      => $validated['status'],
             'category_id' => $validated['category_id'] ?? null,
+            'project_date' => $validated['project_date'] ?? null,
+            'is_featured' => $request->boolean('is_featured'),
+            'project_url' => $validated['project_url'] ?? null,
+            'repository_url' => $validated['repository_url'] ?? null,
         ];
     }
 }
