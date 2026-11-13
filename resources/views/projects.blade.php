@@ -20,15 +20,29 @@
             @endforeach
         </select>
 
+        <select name="technology" class="form-control toolbar-select" aria-label="Filter technology">
+            <option value="">Semua technology</option>
+            @foreach ($technologies as $t)
+                <option value="{{ $t->slug }}" @selected($technology === $t->slug)>{{ $t->name }}</option>
+            @endforeach
+        </select>
+
         <select name="sort" class="form-control toolbar-select" aria-label="Urutkan">
             <option value="terbaru" @selected($sort === 'terbaru')>Terbaru</option>
             <option value="terlama" @selected($sort === 'terlama')>Terlama</option>
+            <option value="tanggal_terbaru" @selected($sort === 'tanggal_terbaru')>Tanggal project terbaru</option>
+            <option value="tanggal_terlama" @selected($sort === 'tanggal_terlama')>Tanggal project terlama</option>
             <option value="judul" @selected($sort === 'judul')>Judul A-Z</option>
         </select>
 
         <button type="submit" class="btn btn-primary btn-sm">Cari</button>
 
+        @if ($isFiltered)
+            <a href="{{ route('portfolio.projects') }}" class="btn btn-outline btn-sm">Reset</a>
+        @endif
     </form>
+
+    <p class="result-info" role="status">{{ $projects->total() }} hasil ditemukan</p>
 
     <section class="section">
         <div class="project-grid">

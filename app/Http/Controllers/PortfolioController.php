@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Project;
+use App\Models\Technology;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -15,6 +16,7 @@ class PortfolioController extends Controller
     {
         $search = trim((string) $request->query('search'));
         $category = $request->query('category', '');
+        $technology = $request->query('technology', '');
         $sort = $request->query('sort', 'terbaru');
         if ($sort === 'az') {
             $sort = 'judul';
@@ -30,7 +32,9 @@ class PortfolioController extends Controller
                 ->orWhere('short_description', 'like', "%{$search}%")
                 ->orWhere('deskripsi', 'like', "%{$search}%")))
             ->when(filled($category), fn ($q) => $q
-                ->whereHas('category', fn ($w) => $w->where('slug', $category)));
+                ->whereHas('category', fn ($w) => $w->where('slug', $category)))
+            ->when(filled($technology), fn ($q) => $q
+                ->whereHas('technologies', fn ($w) => $w->where('slug', $technology)));
 
         switch ($sort) {
             case 'terlama':
@@ -38,6 +42,12 @@ class PortfolioController extends Controller
                 break;
             case 'judul':
                 $query->orderBy('nama')->orderBy('id');
+                break;
+            case 'tanggal_terbaru':
+                $query->orderByRaw('project_date is null')->orderByDesc('project_date')->orderByDesc('id');
+                break;
+            case 'tanggal_terlama':
+                $query->orderByRaw('project_date is not null')->orderBy('project_date')->orderBy('id');
                 break;
             default:
                 $query->latest()->orderByDesc('id');
@@ -48,9 +58,12 @@ class PortfolioController extends Controller
         return view('projects', [
             'projects'   => $projects,
             'categories' => Category::orderBy('name')->get(),
+            'technologies' => Technology::orderBy('name')->get(),
             'search'     => $search,
             'category'   => $category,
+            'technology' => $technology,
             'sort'       => $sort,
+            'isFiltered' => $search !== '' || filled($category) || filled($technology) || $sort !== 'terbaru',
         ]);
     }
 

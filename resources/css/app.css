@@ -765,6 +765,12 @@ textarea.form-control {
     width: auto;
 }
 
+.result-info {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
 .toolbar-select {
     flex: 0 0 auto;
     width: auto;

@@ -20,15 +20,17 @@
     @endif
 
     <div class="filter-tabs">
-        <a href="{{ route('projects.index', request()->only(['search', 'per_page'])) }}"
-           class="{{ request('status') !== 'published' ? 'active' : '' }}">Semua</a>
-        <a href="{{ route('projects.index', array_merge(request()->only(['search', 'per_page']), ['status' => 'published'])) }}"
-           class="{{ request('status') === 'published' ? 'active' : '' }}">Published</a>
+        <a href="{{ route('projects.index', array_filter(['search' => $search, 'per_page' => $perPage])) }}"
+           class="{{ $status === '' ? 'active' : '' }}">Semua</a>
+        <a href="{{ route('projects.index', array_filter(['search' => $search, 'per_page' => $perPage, 'status' => 'published'])) }}"
+           class="{{ $status === 'published' ? 'active' : '' }}">Published</a>
+        <a href="{{ route('projects.index', array_filter(['search' => $search, 'per_page' => $perPage, 'status' => 'draft'])) }}"
+           class="{{ $status === 'draft' ? 'active' : '' }}">Draft</a>
     </div>
 
     <form method="GET" action="{{ route('projects.index') }}" class="toolbar">
-        @if (request('status') === 'published')
-            <input type="hidden" name="status" value="published">
+        @if ($status !== '')
+            <input type="hidden" name="status" value="{{ $status }}">
         @endif
 
         <input type="search" name="search" value="{{ $search }}"
@@ -44,11 +46,13 @@
 
         <button type="submit" class="btn btn-primary btn-sm">Cari</button>
 
-        @if ($search !== '')
-            <a href="{{ route('projects.index', array_filter(['status' => request('status'), 'per_page' => $perPage])) }}"
+        @if ($search !== '' || $status !== '')
+            <a href="{{ route('projects.index') }}"
                class="btn btn-outline btn-sm">Reset</a>
         @endif
     </form>
+
+    <p class="result-info" role="status">{{ $projects->total() }} hasil ditemukan</p>
 
     <section class="section">
         <div class="project-grid">
@@ -91,8 +95,13 @@
                 </article>
             @empty
                 <div class="empty-state">
-                    <p>Belum ada data proyek.</p>
+                     @if ($search !== '' || $status !== '')
+                    <p>Tidak ada project yang cocok dengan pencarian atau filter.</p>
+                    <a href="{{ route('projects.index') }}" class="btn btn-outline">Reset</a>
+                    @else
+                    <p>Belum ada project yang ditambahkan.</p>
                     <a href="{{ route('projects.create') }}" class="btn btn-outline">Tambah Project</a>
+                    @endif
                 </div>
             @endforelse
         </div>

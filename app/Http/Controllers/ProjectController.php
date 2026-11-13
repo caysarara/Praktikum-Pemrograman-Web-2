@@ -23,18 +23,19 @@ class ProjectController extends Controller
 
         $query = Project::with('category')->orderBy('id');
 
-        if ($request->query('status') === 'published') {
-            $query->published();
-        }
+        $status = in_array($request->query('status'), ['published', 'draft'], true)
+            ? $request->query('status')
+            : '';
 
-        if ($search !== '') {
-            $query->where('nama', 'like', '%' . $search . '%');
-        }
+        $query->when($status !== '', fn ($q) => $q->where('status', $status))
+            ->when($search !== '', fn ($q) => $q->where(fn ($w) => $w
+                ->where('nama', 'like', "%{$search}%")
+                ->orWhere('short_description', 'like', "%{$search}%")));
 
         $projects = $query->paginate($perPage)->withQueryString();
         $trashedCount = Project::onlyTrashed()->count();
 
-        return view('projects.index', compact('projects', 'trashedCount', 'search', 'perPage'));
+        return view('projects.index', compact('projects', 'trashedCount', 'search', 'perPage', 'status'));
     }
 
     public function create(): View
@@ -88,7 +89,7 @@ class ProjectController extends Controller
 
         $technologyIds = $validated['technologies'] ?? [];
 
-        $data = $this->payload($request, $validated, $technologyIds ?? []);
+        $data = $this->payload($request, $validated, $technologyIds);
 
         $oldThumbnail = $project->thumbnail;
 
