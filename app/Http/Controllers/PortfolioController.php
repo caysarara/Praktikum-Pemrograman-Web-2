@@ -10,7 +10,7 @@ use Illuminate\View\View;
 
 class PortfolioController extends Controller
 {
-    private const SORTS = ['terbaru', 'terlama', 'judul'];
+    private const SORTS = ['terbaru', 'terlama', 'judul', 'tanggal_terbaru', 'tanggal_terlama'];
 
     public function projects(Request $request): View
     {
