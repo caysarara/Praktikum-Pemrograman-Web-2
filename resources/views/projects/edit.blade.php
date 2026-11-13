@@ -108,7 +108,7 @@
                     @enderror
                 </div>
 
-                div class="form-group">
+                <div class="form-group">
                     <label for="project_date" class="form-label">Tanggal Project</label>
                     <input type="date" id="project_date" name="project_date"
                            value="{{ old('project_date', $project->project_date?->format('Y-m-d')) }}"

@@ -14,7 +14,7 @@ class PortfolioController extends Controller
     public function projects(Request $request): View
     {
         $search = trim((string) $request->query('search'));
-        $category = $request->query('category');
+        $category = $request->query('category', '');
         $sort = $request->query('sort', 'terbaru');
         if ($sort === 'az') {
             $sort = 'judul';
@@ -29,7 +29,7 @@ class PortfolioController extends Controller
                 ->where('nama', 'like', "%{$search}%")
                 ->orWhere('short_description', 'like', "%{$search}%")
                 ->orWhere('deskripsi', 'like', "%{$search}%")))
-            ->when($category !== '', fn ($q) => $q
+            ->when(filled($category), fn ($q) => $q
                 ->whereHas('category', fn ($w) => $w->where('slug', $category)));
 
         switch ($sort) {

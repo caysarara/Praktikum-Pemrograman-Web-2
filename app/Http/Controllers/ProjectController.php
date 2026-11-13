@@ -17,8 +17,7 @@ class ProjectController extends Controller
     {
 
         $perPage = in_array((int) $request->query('per_page'), [5, 10, 25], true)
-            ? (int) $request->query('per_page')
-            : 10;
+            ? (int) $request->query('per_page'): 10;
 
         $search = trim((string) $request->query('search', ''));
 
@@ -156,11 +155,10 @@ class ProjectController extends Controller
             ->with('success', 'Project dihapus permanen.');
     }
 
-    private function rules(): array
+    private function rules(?Project $project = null): array
     {
         return [
-            'nama'        => ['required', 'string', 'min:5', 'max:255',
-                                Rule::unique('projects', 'nama')->ignore($project?->id)],
+            'nama'        => ['required', 'string', 'min:5', 'max:255', Rule::unique('projects', 'nama')->ignore($project?->id)],
             'short_description' => 'nullable|string|max:255',
             'deskripsi'   => 'required|string|min:10',
             'stack'       => 'nullable|string',
