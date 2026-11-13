@@ -64,8 +64,8 @@
                     <p>Tidak ada project yang ditemukan.</p>
                 </div>
             @endforelse
-            {{ $projects->links() }}
         </div>
+        {{ $projects->links() }}
     </section>
 @endsection
 

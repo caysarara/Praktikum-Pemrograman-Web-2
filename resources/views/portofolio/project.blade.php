@@ -33,7 +33,7 @@
             @if ($project->project_date)
                 <div class="detail-block">
                     <h3 class="detail-label">Tanggal Project</h3>
-                    <p class="detail-text">{{ $project->project_date->translateFormat('d F Y') }}</p>
+                    <p class="detail-text">{{ $project->project_date->Format('d F Y') }}</p>
                 </div>
             @endif
 

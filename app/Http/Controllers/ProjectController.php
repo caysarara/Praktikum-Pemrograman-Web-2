@@ -49,7 +49,7 @@ class ProjectController extends Controller
     {
         $validated = $request->validate($this->rules(), $this->messages());
 
-        $technologyIds = $validated['technology_ids'] ?? [];
+        $technologyIds = $validated['technologies'] ?? [];
 
         $data = $this->payload($request, $validated, $technologyIds);
 
@@ -84,9 +84,9 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project): RedirectResponse
     {
-        $validated = $request->validate($this->rules(), $this->messages());
+        $validated = $request->validate($this->rules($project), $this->messages());
 
-        $technologyIds = $validated['technology_ids'] ?? [];
+        $technologyIds = $validated['technologies'] ?? [];
 
         $data = $this->payload($request, $validated, $technologyIds ?? []);
 
