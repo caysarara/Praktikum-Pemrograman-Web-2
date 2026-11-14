@@ -47,7 +47,7 @@ class PortfolioController extends Controller
                 $query->orderByRaw('project_date is null')->orderByDesc('project_date')->orderByDesc('id');
                 break;
             case 'tanggal_terlama':
-                $query->orderByRaw('project_date is not null')->orderBy('project_date')->orderBy('id');
+                $query->orderByRaw('project_date is null')->orderBy('project_date')->orderBy('id');
                 break;
             default:
                 $query->latest()->orderByDesc('id');
