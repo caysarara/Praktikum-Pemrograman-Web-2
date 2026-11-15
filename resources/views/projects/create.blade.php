@@ -58,7 +58,7 @@
                     @enderror
                 </div>
 
-                div class="form-group">
+                <div class="form-group">
                     <span class="form-label">Technologies</span>
                     <div class="check-grid">
                         @forelse ($technologies as $technology)

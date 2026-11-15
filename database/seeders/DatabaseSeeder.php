@@ -11,8 +11,6 @@ class DatabaseSeeder extends Seeder
 {
     // use WithoutModelEvents;
 
-   
-
     /**
      * Seed the application's database.
      */
@@ -35,7 +33,7 @@ class DatabaseSeeder extends Seeder
         'role' => 'admin',
         ]);
 
-        user::create([
+        User::create([
             'name' => 'User Biasa',
             'email' => 'user@example.com',
             'password' => Hash::make('password123'),
