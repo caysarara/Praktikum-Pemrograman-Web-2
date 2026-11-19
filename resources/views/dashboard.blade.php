@@ -10,13 +10,15 @@
             </h2>
 
             {{-- Titik dua (:value) = isi dengan variabel PHP, bukan teks biasa --}}
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <x-stat-card label="Total Projects" :value="$totalProjects" />
                 <x-stat-card label="Published"      :value="$publishedCount" color="text-green-600" />
                 <x-stat-card label="Draft"          :value="$draftCount" color="text-yellow-600" />
                 <x-stat-card label="Categories"     :value="$totalCategories" color="text-purple-600" />
                 <x-stat-card label="Technologies"   :value="$totalTechnologies" color="text-blue-600" />
                 <x-stat-card label="Skills"         :value="$totalSkills" color="text-orange-600" />
+                 <x-stat-card label="Messages"       :value="$totalMessages" color="text-pink-600" />
+                <x-stat-card label="Belum Dibaca"   :value="$unreadMessages" color="text-red-600" />
                 
             </div>
 

@@ -16,6 +16,7 @@
                     @if (Auth::user()->role === 'admin')
                         <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">Projects</x-nav-link>
                         <x-nav-link :href="route('skills.index')" :active="request()->routeIs('skills.*')">Skills</x-nav-link>
+                        <x-nav-link :href="route('post.contacts.index')" :active="request()->routeIs('post.contacts.*')">Contacts</x-nav-link>
                     @endif
                 </div>
             </div>

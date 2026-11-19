@@ -20,6 +20,11 @@
                    class="{{ request()->routeIs('portfolio.projects') ? 'active' : '' }}">Projects</a>
             </li>
 
+            <li>
+                <a href="{{ route('contact') }}"
+                   class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a>
+            </li>
+
 
             @auth
             <li>

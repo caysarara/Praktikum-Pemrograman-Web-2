@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ContactAdminController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
@@ -14,6 +16,13 @@ Route::view('/', 'home')->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/education', 'education')->name('education');
 
+// Form contact publik: GET tampil form, POST dibatasi 3 pesan/menit per IP
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:contact')
+    ->name('contact.store');
+
+
 // Portfolio publik: hanya project berstatus published
 Route::get('/projects', [PortfolioController::class, 'projects'])->name('portfolio.projects');
 Route::get('/projects/{project:slug}', [PortfolioController::class, 'show'])->name('portfolio.projects.show');
@@ -23,6 +32,12 @@ Route::get('/projects/{project:slug}', [PortfolioController::class, 'show'])->na
 
 Route::prefix('post')->name('post.')->middleware('auth')->group(function () {
     Route::resource('dashboard', DashboardController::class)->only(['index']);
+});
+
+
+// Admin: pesan masuk dari form contact (login wajib; hanya admin)
+Route::prefix('post')->name('post.')->middleware(['auth', 'admin'])->group(function () {
+    Route::resource('contacts', ContactAdminController::class)->only(['index', 'show']);
 });
 
 Route::middleware('auth')->group(function () {

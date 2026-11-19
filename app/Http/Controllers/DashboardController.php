@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Category, Project, Skill, Technology};
+use App\Models\{Category, Contact, Project, Skill, Technology};
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -20,6 +20,8 @@ return view('dashboard', [
                                     ->orderBy('name')
                                     ->get(),
             'totalTechnologies' => Technology::count(),
+            'totalMessages'   => Contact::count(),
+            'unreadMessages'  => Contact::where('is_read', false)->count(),
             'topSkills'       => Skill::orderByDesc('level')->orderBy('name')->take(5)->get(),
             'latestProjects'  => Project::with('category')->latest()->take(5)->get(),
             ]);
